@@ -31,15 +31,7 @@ jobs:
     steps:
       - run:
           name: Test job
-          commands: |
-            URL="https://blog.udacity.com/"
-          # Test if website exists
-            if curl -s --head ${URL} 
-            then
-              return 0
-            else
-              return 1
-            fi
+          commands: return 1
       - destroy_environment 
 
 workflows:
