@@ -38,3 +38,4 @@ workflows:
   myworkflows:
     jobs:
       - create_infrastructure
+      - smoke_test
