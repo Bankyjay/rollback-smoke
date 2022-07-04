@@ -1,5 +1,4 @@
 version: 2.1
-
 commands:
   destroy_environment:
     steps:
@@ -9,14 +8,22 @@ commands:
           # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
           when: on_fail
           command: |
+            URL="https://blog.udacity1.com/"
+            # Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
             aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7}
+
 
 jobs:
   create_infrastructure: 
     docker:
       - image: amazon/aws-cli
     steps:
-      - checkout
       - run:
           name: Create Cloudformation Stack
           command: |
@@ -28,6 +35,7 @@ jobs:
     docker:
       - image: alpine:latest
     steps:
+      checkout
       - run:
           name: Test job
           # Fail the job intentionally to simulate an error.
