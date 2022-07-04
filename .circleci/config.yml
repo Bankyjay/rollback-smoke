@@ -31,7 +31,7 @@ jobs:
     steps:
       - run:
           name: Test job
-          commands: return 1
+          command: return 1
       - destroy_environment 
 
 workflows:
