@@ -17,7 +17,7 @@ workflows:
   myWorkflow:
     jobs:
       - create_infrastructure
-
+      - smoke_test
 
 commands:
    # Exercise - Rollback
@@ -39,9 +39,4 @@ commands:
           name: Test job
           # Fail the job intentionally to simulate an error.
           command:  return 1
-      - destroy_environment
-
-workflows:
-  myworkflows:
-    jobs:
-      - smoke_test 
+      - destroy_environment 
