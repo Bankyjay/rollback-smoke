@@ -1,28 +1,23 @@
 version: 2.1
-
 jobs:
   create_infrastructure: 
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Create Cloudformation Stack
-          command: |
-            aws cloudformation deploy \
-              --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
-              --region us-east-1
+      docker:
+        - image: amazon/aws-cli
+      steps:
+        - checkout
+        - run:
+            name: Create Cloudformation Stack
+            command: |
+              aws cloudformation deploy \
+                --template-file template.yml \
+                --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
+                --region us-east-1
+workflows:
+  myWorkflow:
+    jobs:
+      - create_infrastructure
 
-  smoke_test:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - run:
-          name: Test job
-          # Fail the job intentionally to simulate an error.
-          command:  return 1
-      - destroy_environment
+
 commands:
    # Exercise - Rollback
     destroy_environment:
@@ -34,8 +29,18 @@ commands:
            when: on_fail
            command: |
              aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7}
+
+smoke_test:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - run:
+          name: Test job
+          # Fail the job intentionally to simulate an error.
+          command:  return 1
+      - destroy_environment
+
 workflows:
   myworkflows:
     jobs:
-      - create_infrastructure
       - smoke_test 
