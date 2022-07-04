@@ -2,16 +2,15 @@ version: 2.1
 
 commands:
    # Exercise - Rollback
-    create_environment:
+    create_infrastructure:
       steps:
         - run:
           name: Create environment
-        command: |
-          aws cloudformation deploy \
-              --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
-              --region us-east-1
-
+          command: |
+            aws cloudformation deploy \
+                --template-file template.yml \
+                --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
+                --region us-east-1
 
     destroy_environment:
       steps:
