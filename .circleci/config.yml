@@ -1,17 +1,5 @@
 version: 2.1
 
-commands:
-  destroy_environment:
-    steps:
-      - run:
-          name: Destroy environment
-          # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
-          # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7}
-
-
 jobs:
   create_infrastructure: 
     docker:
@@ -25,24 +13,8 @@ jobs:
               --template-file template.yml \
               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
               --region us-east-1
-  smoke_test:
-    docker:
-      - image: alpine:latest
-    steps:
-      - checkout
-      - run:
-          name: Test job
-          command: |
-          URL="https://blog.udacity.com/"
-          if curl -s --head ${URL} 
-            then
-              return 0
-            else
-              return 1
-          fi
-      - destroy_environment 
+
 workflows:
-  myWorkflow:
+  myworkflows:
     jobs:
-      - smoke_test
       - create_infrastructure
